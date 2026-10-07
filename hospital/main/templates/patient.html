@@ -1,0 +1,930 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard | Patil Hospital</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-light: #ccfbf1;
+            --accent: #0284c7;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(15, 118, 110, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 16px 6px 8px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            color: var(--primary-dark);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .user-info {
+            font-size: 13px;
+        }
+
+        .user-name {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 11px;
+            opacity: 0.85;
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.2);
+            color: white;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* ================= LAYOUT CONTAINER ================= */
+        .container {
+            max-width: 1280px;
+            margin: 30px auto;
+            padding: 0 24px;
+        }
+
+        /* MESSAGES ALERT */
+        .alert-messages {
+            margin-bottom: 24px;
+        }
+
+        .alert {
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .alert-info { background: #f0f9ff; color: #075985; border: 1px solid #bae6fd; }
+
+        /* HERO BANNER */
+        .welcome-hero {
+            background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+            color: white;
+            border-radius: 24px;
+            padding: 32px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 12px 30px rgba(15, 118, 110, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-hero::after {
+            content: "✚";
+            position: absolute;
+            right: -20px;
+            bottom: -40px;
+            font-size: 200px;
+            color: rgba(255, 255, 255, 0.05);
+            font-weight: 900;
+            pointer-events: none;
+        }
+
+        .hero-text h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .hero-text p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            z-index: 1;
+        }
+
+        .btn-action {
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn-action-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-action-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            background: #f8fafc;
+        }
+
+        .btn-action-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-action-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.teal { background: #ccfbf1; color: #0f766e; }
+        .stat-icon.blue { background: #e0f2fe; color: #0284c7; }
+        .stat-icon.purple { background: #f3e8ff; color: #9333ea; }
+        .stat-icon.amber { background: #fef3c7; color: #d97706; }
+
+        .stat-info h3 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .stat-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* SECTION CARDS & TABLES */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            margin-bottom: 35px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8fafc;
+            padding: 14px 18px;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 18px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* BADGES */
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .badge-confirmed { background: #dcfce7; color: #15803d; }
+        .badge-pending { background: #fef3c7; color: #b45309; }
+        .badge-cancelled { background: #fef2f2; color: #b91c1c; }
+        .badge-completed { background: #e0f2fe; color: #0369a1; }
+        .badge-paid { background: #dcfce7; color: #15803d; }
+
+        .btn-sm {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel {
+            background: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+        }
+
+        .btn-cancel:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-pay {
+            background: #0f766e;
+            color: white;
+            border: none;
+        }
+
+        .btn-pay:hover {
+            background: #115e59;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 16px 20px; }
+            .welcome-hero { flex-direction: column; text-align: center; gap: 20px; }
+            .hero-actions { width: 100%; justify-content: center; }
+            .container { padding: 0 16px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-icon">✚</div>
+            <span>Patil Hospital</span>
+        </div>
+        <div class="nav-right">
+            <div class="user-pill">
+                <div class="user-avatar">{{ patient.name|slice:":1"|upper }}</div>
+                <div class="user-info">
+                    <div class="user-name">{{ patient.name }}</div>
+                    <div class="user-role">Patient ID: #PAT-{{ patient.id }}</div>
+                </div>
+            </div>
+            <a href="{% url 'logout' %}" class="btn-logout">Logout 🚪</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- MESSAGES ALERTS -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+                {% if message.tags == 'error' %}⚠️{% elif message.tags == 'success' %}✓{% else %}ℹ️{% endif %}
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- WELCOME HERO BANNER -->
+        <div class="welcome-hero">
+            <div class="hero-text">
+                <h2>Welcome Back, {{ patient.name }}! 👋</h2>
+                <p>Manage your health appointments, view prescriptions, and track test reports cleanly.</p>
+            </div>
+            <div class="hero-actions">
+                <a href="{% url 'book_appointment' %}" class="btn-action btn-action-primary">
+                    ➕ Book Appointment
+                </a>
+                <a href="{% url 'edit_profile' %}" class="btn-action btn-action-secondary">
+                    ✏️ Edit Profile
+                </a>
+            </div>
+        </div>
+
+        <!-- STATS OVERVIEW -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon teal">🗓️</div>
+                <div class="stat-info">
+                    <h3>{{ stats.upcoming|default:"0" }}</h3>
+                    <p>Upcoming Appointments</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon blue">💊</div>
+                <div class="stat-info">
+                    <h3>{{ stats.prescriptions|default:"0" }}</h3>
+                    <p>Active Prescriptions</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple">📑</div>
+                <div class="stat-info">
+                    <h3>{{ stats.test_reports|default:"0" }}</h3>
+                    <p>Lab Test Reports</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon amber">💳</div>
+                <div class="stat-info">
+                    <h3>{{ stats.pending_bills|default:"0" }}</h3>
+                    <p>Pending Invoices</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- APPOINTMENTS TABLE CARD -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span>🗓️</span> My Appointments
+                </div>
+                <a href="{% url 'book_appointment' %}" class="btn-action btn-action-primary" style="padding: 8px 16px; font-size: 13px;">
+                    + New Booking
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                {% if appointments %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Doctor & Department</th>
+                            <th>Date & Time</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for apt in appointments %}
+                        <tr>
+                            <td>
+                                <strong>Dr. {{ apt.doctor.name }}</strong>
+                                <div style="font-size: 12px; color: var(--text-muted);">{{ apt.department.name }}</div>
+                            </td>
+                            <td>
+                                <div>📅 {{ apt.appointment_date }}</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">⏰ {{ apt.appointment_time }}</div>
+                            </td>
+                            <td>{{ apt.reason|default:"General Checkup" }}</td>
+                            <td>
+                                {% if apt.status == 'Confirmed' %}
+                                    <span class="badge badge-confirmed">✓ Confirmed</span>
+                                {% elif apt.status == 'Pending' %}
+                                    <span class="badge badge-pending">⏳ Pending</span>
+                                {% elif apt.status == 'Completed' %}
+                                    <span class="badge badge-completed">✓ Completed</span>
+                                {% else %}
+                                    <span class="badge badge-cancelled">{{ apt.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                    {% if apt.bill and apt.bill.payment_status == 'Paid' %}
+                                        <span class="badge badge-confirmed" style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 11px;">🟢 Paid (₹{{ apt.bill.total_amount|floatformat:0 }})</span>
+                                    {% elif apt.bill %}
+                                        <button type="button" class="btn-action btn-action-primary" style="padding: 6px 12px; font-size: 12px; background: #0f766e; color: white;" onclick="triggerPayModal('{% url 'process_direct_payment' apt.bill.id %}', 'Dr. {{ apt.doctor.name }}', '{{ apt.bill.total_amount }}')">
+                                            💳 Pay ₹{{ apt.bill.total_amount|floatformat:0 }}
+                                        </button>
+                                    {% else %}
+                                        <button type="button" class="btn-action btn-action-primary" style="padding: 6px 12px; font-size: 12px; background: #0f766e; color: white;" onclick="triggerPayModal('{% url 'pay_appointment_fee' apt.id %}', 'Dr. {{ apt.doctor.name }}', '{{ apt.doctor.consultation_fee|default:500 }}')">
+                                            💳 Pay ₹{{ apt.doctor.consultation_fee|default:500|floatformat:0 }}
+                                        </button>
+                                    {% endif %}
+
+                                    {% if apt.status == 'Pending' or apt.status == 'Confirmed' %}
+                                    <a href="{% url 'cancel_appointment' apt.id %}" class="btn-sm btn-cancel" onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                        Cancel
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📅</div>
+                    <p>No appointments found. Click "+ New Booking" to schedule your visit.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- PRESCRIPTIONS & TEST REPORTS GRID -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            
+            <!-- PRESCRIPTIONS -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>💊</span> Recent Prescriptions
+                    </div>
+                </div>
+                {% if prescriptions %}
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Medicine</th>
+                                <th>Dosage & Freq</th>
+                                <th>Doctor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rx in prescriptions %}
+                            <tr>
+                                <td>
+                                    <strong>{{ rx.medicine_name|linebreaksbr }}</strong>
+                                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Duration: {{ rx.duration|linebreaksbr }}</div>
+                                </td>
+                                <td>
+                                    <div>{{ rx.dosage|linebreaksbr }}</div>
+                                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">{{ rx.frequency|linebreaksbr }}</div>
+                                </td>
+                                <td>Dr. {{ rx.doctor.name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">💊</div>
+                    <p>No prescription records available.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- TEST REPORTS -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>📑</span> Lab Test Reports
+                    </div>
+                </div>
+                {% if test_reports %}
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Test Name</th>
+                                <th>Date</th>
+                                <th>Status / File</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in test_reports %}
+                            <tr>
+                                <td>
+                                    <strong>{{ report.test_name }}</strong>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Dr. {{ report.doctor.name }}</div>
+                                </td>
+                                <td>{{ report.test_date }}</td>
+                                <td>
+                                    {% if report.report_file %}
+                                    <a href="{{ report.report_file.url }}" target="_blank" class="btn-sm btn-pay" style="font-size: 11px;">
+                                        📥 View PDF
+                                    </a>
+                                    {% else %}
+                                    <span class="badge badge-pending">{{ report.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📑</div>
+                    <p>No lab test reports uploaded yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        <!-- INVOICES & PAYMENTS CARD -->
+        <div class="card" id="payments">
+            <div class="card-header">
+                <div class="card-title">
+                    <span>💳</span> Invoices & Payment History
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                {% if bills or payments %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bill / Txn ID</th>
+                            <th>Doctor & Service</th>
+                            <th>Amount (₹)</th>
+                            <th>Date</th>
+                            <th>Payment Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bill in bills %}
+                        <tr>
+                            <td>
+                                <strong>{{ bill.bill_number }}</strong>
+                            </td>
+                            <td>
+                                <div><strong>Dr. {{ bill.appointment.doctor.name }}</strong></div>
+                                <div style="font-size: 11px; color: var(--text-muted);">🏥 {{ bill.appointment.doctor.department.name|default:"General" }}</div>
+                            </td>
+                            <td>
+                                <strong style="color: #0f766e; font-size: 15px;">₹{{ bill.total_amount|floatformat:2 }}</strong>
+                            </td>
+                            <td>{{ bill.created_at|date:"d M Y" }}</td>
+                            <td>
+                                {% if bill.payment_status == 'Paid' %}
+                                    <span class="badge badge-confirmed" style="background: #dcfce7; color: #166534;">🟢 Paid</span>
+                                {% else %}
+                                    <span class="badge badge-pending">⏳ Unpaid</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if bill.payment_status == 'Paid' %}
+                                    {% if bill.payment %}
+                                    <a href="{% url 'payment_receipt' bill.payment.id %}" class="btn-action btn-action-primary" style="padding: 6px 14px; font-size: 12px; background: #e0f2fe; color: #0369a1;">
+                                        📄 Receipt
+                                    </a>
+                                    {% else %}
+                                    <span style="font-size: 12px; color: #10b981; font-weight: bold;">✓ Paid</span>
+                                    {% endif %}
+                                {% else %}
+                                    <button type="button" class="btn-action btn-action-primary" style="padding: 6px 14px; font-size: 12px; background: #0f766e; color: white;" onclick="triggerPayModal('{% url 'process_direct_payment' bill.id %}', 'Dr. {{ bill.appointment.doctor.name }}', '{{ bill.total_amount }}')">
+                                        💳 Pay Now
+                                    </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">💳</div>
+                    <p>No billing or payment history available.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PAYMENT MODAL -->
+    <div id="paymentModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; border-radius: 24px; max-width: 480px; width: 100%; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; border: 1px solid #e2e8f0;">
+            <button onclick="closePayModal()" style="position: absolute; right: 20px; top: 20px; background: #f1f5f9; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-weight: bold; font-size: 16px;">✕</button>
+            
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #ccfbf1; color: #0f766e; display: flex; align-items: center; justify-content: center; font-size: 20px;">💳</div>
+                <div>
+                    <h3 style="font-size: 18px; font-weight: 800; color: #0f172a;">Hospital Consultation Fee</h3>
+                    <p id="payDoctorSubtext" style="font-size: 13px; color: #64748b;">Paying Consultation Fee for Doctor</p>
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 13px; font-weight: 700; color: #475569;">Total Fee Amount</span>
+                <span id="payAmountDisplay" style="font-size: 24px; font-weight: 800; color: #0f766e;">₹500.00</span>
+            </div>
+
+            <form id="payFormAction" method="POST" action="">
+                {% csrf_token %}
+                <input type="hidden" id="selectedPayMethod" name="payment_method" value="UPI">
+
+                <label style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 8px; display: block;">Select Payment Method</label>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+                    <button type="button" class="pay-method-btn active" id="btnMethodUPI" onclick="selectPayTab('UPI')" style="padding: 10px; border-radius: 12px; border: 2px solid #0f766e; background: #ccfbf1; color: #0f766e; font-weight: 700; font-size: 13px; cursor: pointer; text-align: center;">
+                        📱 UPI
+                    </button>
+                    <button type="button" class="pay-method-btn" id="btnMethodCard" onclick="selectPayTab('Card')" style="padding: 10px; border-radius: 12px; border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; font-weight: 700; font-size: 13px; cursor: pointer; text-align: center;">
+                        💳 Card
+                    </button>
+                    <button type="button" class="pay-method-btn" id="btnMethodCash" onclick="selectPayTab('Cash')" style="padding: 10px; border-radius: 12px; border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; font-weight: 700; font-size: 13px; cursor: pointer; text-align: center;">
+                        💵 Cash
+                    </button>
+                </div>
+
+                <!-- UPI CONTAINER WITH DYNAMIC QR CODE -->
+                <div id="containerUPI" style="display: block; margin-bottom: 20px;">
+                    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 14px;">
+                        <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #0f766e; margin-bottom: 8px;">
+                            📷 Scan QR Code to Pay via Any UPI App
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 14px; display: inline-block; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                            <img id="upiQrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=upi%3A%2F%2Fpay%3Fpa%3D9022328691%40superyes%26pn%3DPatil%2520Hospital%26am%3D500%26cu%3DINR" alt="UPI QR Code" style="width: 170px; height: 170px; display: block;">
+                        </div>
+                        <div style="margin-top: 10px; font-size: 13px; font-weight: 700; color: #1e293b;">
+                            UPI ID: <span style="color: #0f766e; background: #e0f2fe; padding: 4px 10px; border-radius: 8px; font-family: monospace;">9022328691@superyes</span>
+                            <button type="button" onclick="copyUpiId()" style="margin-left: 6px; padding: 4px 8px; border-radius: 6px; border: 1px solid #cbd5e1; background: white; cursor: pointer; font-size: 11px; font-weight: 700;">📋 Copy</button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; flex-wrap: wrap;">
+                        <span style="padding: 6px 12px; background: #e0f2fe; color: #0369a1; border-radius: 8px; font-weight: 700; font-size: 12px;">Google Pay</span>
+                        <span style="padding: 6px 12px; background: #fae8ff; color: #86198f; border-radius: 8px; font-weight: 700; font-size: 12px;">PhonePe</span>
+                        <span style="padding: 6px 12px; background: #dbeafe; color: #1d4ed8; border-radius: 8px; font-weight: 700; font-size: 12px;">Paytm</span>
+                        <span style="padding: 6px 12px; background: #dcfce7; color: #166534; border-radius: 8px; font-weight: 700; font-size: 12px;">BHIM UPI</span>
+                    </div>
+
+                    <label style="font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px; display: block;">Your UPI ID / Phone Number</label>
+                    <input type="text" name="upi_id" id="patientUpiInput" placeholder="9022328691@superyes" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 14px; outline: none;" value="9022328691@superyes">
+                </div>
+
+                <!-- CARD CONTAINER -->
+                <div id="containerCard" style="display: none; margin-bottom: 20px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px; display: block;">Card Number</label>
+                    <input type="text" name="card_num" placeholder="4532 •••• •••• 8921" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; margin-bottom: 10px;">
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <div style="flex: 1;">
+                            <label style="font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px; display: block;">Expiry Date</label>
+                            <input type="text" placeholder="MM/YY" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 14px; outline: none;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px; display: block;">CVV Code</label>
+                            <input type="password" placeholder="•••" maxlength="4" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 14px; outline: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CASH CONTAINER -->
+                <div id="containerCash" style="display: none; margin-bottom: 20px; background: #fef3c7; border: 1px solid #fde68a; border-radius: 12px; padding: 12px; font-size: 13px; color: #92400e;">
+                    ℹ️ You can pay cash directly at Patil Hospital Reception desk upon arrival.
+                </div>
+
+                <button type="submit" style="width: 100%; padding: 14px; border-radius: 14px; background: linear-gradient(135deg, #0f766e, #115e59); color: white; border: none; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 14px rgba(15, 118, 110, 0.3);">
+                    🔒 Pay & Confirm Transaction
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function triggerPayModal(actionUrl, doctorName, feeAmount) {
+            const overlay = document.getElementById('paymentModalOverlay');
+            const form = document.getElementById('payFormAction');
+            const subtext = document.getElementById('payDoctorSubtext');
+            const amountDisp = document.getElementById('payAmountDisplay');
+            const qrImg = document.getElementById('upiQrCodeImg');
+
+            if (form) form.action = actionUrl;
+            if (subtext) subtext.innerText = 'Consultation Fee for ' + doctorName;
+            if (amountDisp) amountDisp.innerText = '₹' + parseFloat(feeAmount).toFixed(2);
+
+            if (qrImg) {
+                const qrData = encodeURIComponent('upi://pay?pa=9022328691@superyes&pn=Patil Hospital&am=' + feeAmount + '&cu=INR');
+                qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=' + qrData;
+            }
+
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
+        }
+
+        function copyUpiId() {
+            navigator.clipboard.writeText('9022328691@superyes');
+            alert('Official UPI ID (9022328691@superyes) copied to clipboard!');
+        }
+
+        function closePayModal() {
+            const overlay = document.getElementById('paymentModalOverlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        function selectPayTab(method) {
+            document.getElementById('selectedPayMethod').value = method;
+            
+            const btnUPI = document.getElementById('btnMethodUPI');
+            const btnCard = document.getElementById('btnMethodCard');
+            const btnCash = document.getElementById('btnMethodCash');
+
+            const conUPI = document.getElementById('containerUPI');
+            const conCard = document.getElementById('containerCard');
+            const conCash = document.getElementById('containerCash');
+
+            // Reset buttons
+            [btnUPI, btnCard, btnCash].forEach(btn => {
+                if (btn) {
+                    btn.style.border = '1px solid #cbd5e1';
+                    btn.style.background = '#f8fafc';
+                    btn.style.color = '#475569';
+                }
+            });
+
+            if (conUPI) conUPI.style.display = 'none';
+            if (conCard) conCard.style.display = 'none';
+            if (conCash) conCash.style.display = 'none';
+
+            if (method === 'UPI') {
+                if (btnUPI) {
+                    btnUPI.style.border = '2px solid #0f766e';
+                    btnUPI.style.background = '#ccfbf1';
+                    btnUPI.style.color = '#0f766e';
+                }
+                if (conUPI) conUPI.style.display = 'block';
+            } else if (method === 'Card') {
+                if (btnCard) {
+                    btnCard.style.border = '2px solid #0f766e';
+                    btnCard.style.background = '#ccfbf1';
+                    btnCard.style.color = '#0f766e';
+                }
+                if (conCard) conCard.style.display = 'block';
+            } else if (method === 'Cash') {
+                if (btnCash) {
+                    btnCash.style.border = '2px solid #0f766e';
+                    btnCash.style.background = '#ccfbf1';
+                    btnCash.style.color = '#0f766e';
+                }
+                if (conCash) conCash.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>

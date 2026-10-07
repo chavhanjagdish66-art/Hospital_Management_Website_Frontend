@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Department Master | Patil Hospital Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #0f172a; padding: 40px 20px; }
+        .card { max-width: 550px; margin: 0 auto; background: white; padding: 30px; border-radius: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        h1 { font-size: 22px; font-weight: 800; margin-bottom: 20px; color: #0f766e; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; font-family: inherit; }
+        .btn-submit { width: 100%; background: #0f766e; color: white; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+        .btn-back { display: inline-block; margin-top: 15px; color: #64748b; text-decoration: none; font-size: 13px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>➕ Add Department Master</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Department Name *</label>
+                <input type="text" name="name" placeholder="e.g. Cardiology, Neurology" required>
+            </div>
+            <div class="form-group">
+                <label>Icon / Emoji</label>
+                <input type="text" name="icon" value="🏥" placeholder="e.g. ❤️, 🧠, 🦴">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" rows="3" placeholder="Brief details about specialization..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">➕ Save & Create Dynamic Master</button>
+        </form>
+        <a href="{% url 'manage_departments' %}" class="btn-back">← Back to System Settings</a>
+    </div>
+</body>
+</html>

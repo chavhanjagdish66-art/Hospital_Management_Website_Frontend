@@ -1,0 +1,483 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt #{{ payment.receipt_number|default:payment.id }} | Patil Hospital</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-bg: #ccfbf1;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --shadow-md: 0 10px 30px -5px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--gray-800);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* TOOLBAR ABOVE RECEIPT */
+        .toolbar {
+            width: 100%;
+            max-width: 720px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            gap: 16px;
+        }
+
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .btn-back:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(15, 118, 110, 0.3);
+        }
+
+        .btn-print:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4);
+        }
+
+        /* RECEIPT CARD CONTAINER */
+        .receipt-card {
+            background: white;
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .receipt-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #0f766e, #14b8a6, #3b82f6);
+        }
+
+        /* HOSPITAL HEADER */
+        .receipt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 24px;
+            border-bottom: 2px dashed var(--gray-200);
+            margin-bottom: 28px;
+        }
+
+        .hospital-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hospital-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #0f766e, #115e59);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+        }
+
+        .hospital-info h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--gray-900);
+            letter-spacing: -0.5px;
+        }
+
+        .hospital-info p {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .receipt-badge-box {
+            text-align: right;
+        }
+
+        .status-stamp {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .receipt-no {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .receipt-date {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        /* TWO COLUMN DETAILS GRID */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .detail-box h4 {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--gray-400);
+            margin-bottom: 10px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-item .lbl {
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .detail-item .val {
+            color: var(--gray-900);
+            font-weight: 700;
+        }
+
+        /* TABLE OF CHARGES */
+        .charges-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 28px;
+        }
+
+        .charges-table th {
+            text-align: left;
+            padding: 12px 16px;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .charges-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 14px;
+        }
+
+        .charges-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .charges-table .item-name {
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .charges-table .item-sub {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        /* TOTAL BANNER */
+        .total-banner {
+            background: linear-gradient(135deg, #0f766e, #115e59);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 14px rgba(15, 118, 110, 0.2);
+            margin-bottom: 28px;
+        }
+
+        .total-banner .lbl {
+            font-size: 14px;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        .total-banner .val {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        /* FOOTER DISCLAIMER */
+        .receipt-footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-200);
+            color: var(--gray-500);
+            font-size: 12px;
+        }
+
+        .receipt-footer strong {
+            color: var(--gray-800);
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .toolbar {
+                display: none !important;
+            }
+            .receipt-card {
+                box-shadow: none;
+                border: none;
+                max-width: 100%;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <a href="{% url 'patient_dashboard' %}" class="btn-link btn-back">
+            ← Back to Patient Dashboard
+        </a>
+        <button onclick="window.print()" class="btn-link btn-print">
+            🖨️ Print / Download PDF Receipt
+        </button>
+    </div>
+
+    <!-- OFFICIAL RECEIPT CARD -->
+    <main class="receipt-card">
+        <!-- HEADER -->
+        <header class="receipt-header">
+            <div class="hospital-brand">
+                <div class="hospital-logo">🏥</div>
+                <div class="hospital-info">
+                    <h2>Patil Hospital</h2>
+                    <p>Multi-Specialty Healthcare & Clinical Services</p>
+                </div>
+            </div>
+            <div class="receipt-badge-box">
+                <div class="status-stamp">
+                    🟢 Paid & Confirmed
+                </div>
+                <div class="receipt-no">
+                    Receipt #{{ payment.receipt_number|default:payment.id }}
+                </div>
+                <div class="receipt-date">
+                    {{ payment.payment_date|date:"d M Y, h:i A"|default:payment.created_at|date:"d M Y, h:i A" }}
+                </div>
+            </div>
+        </header>
+
+        <!-- DETAILS GRID -->
+        <section class="details-grid">
+            <div class="detail-box">
+                <h4>👤 Patient Information</h4>
+                <div class="detail-item">
+                    <span class="lbl">Patient Name:</span>
+                    <span class="val">{{ patient.name }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="lbl">Patient ID:</span>
+                    <span class="val">#PAT-{{ patient.id }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="lbl">Email:</span>
+                    <span class="val">{{ patient.email }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="lbl">Phone:</span>
+                    <span class="val">{{ patient.phone|default:"-" }}</span>
+                </div>
+            </div>
+
+            <div class="detail-box">
+                <h4>🩺 Consultation Details</h4>
+                <div class="detail-item">
+                    <span class="lbl">Doctor:</span>
+                    <span class="val">Dr. {{ appointment.doctor.name|default:"Hospital Specialist" }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="lbl">Department:</span>
+                    <span class="val">{{ appointment.doctor.department.name|default:"General Medicine" }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="lbl">Specialization:</span>
+                    <span class="val">{{ appointment.doctor.specialization|default:"Medical Care" }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="lbl">Appointment Date:</span>
+                    <span class="val">{{ appointment.appointment_date|date:"d M Y" }} @ {{ appointment.appointment_time|time:"h:i A" }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHARGES TABLE -->
+        <table class="charges-table">
+            <thead>
+                <tr>
+                    <th>Service Description</th>
+                    <th>Payment Method</th>
+                    <th style="text-align: right;">Amount (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="item-name">Doctor Consultation & Outpatient Service Fee</div>
+                        <div class="item-sub">Reason: {{ appointment.reason|default:"Medical Consultation" }}</div>
+                    </td>
+                    <td>
+                        <strong style="color: #0f766e;">
+                            📱 {{ payment.payment_method|default:"Online UPI / Card" }}
+                        </strong>
+                    </td>
+                    <td style="text-align: right; font-weight: 800; color: #0f172a;">
+                        ₹{{ payment.amount|floatformat:2 }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="item-name">Hospital Administrative & Registration Charges</div>
+                        <div class="item-sub">Includes Electronic Medical Record (EMR) logging</div>
+                    </td>
+                    <td>
+                        <span style="color: #10b981; font-weight: 700;">Waived</span>
+                    </td>
+                    <td style="text-align: right; font-weight: 800; color: #10b981;">
+                        ₹0.00
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- TOTAL BANNER -->
+        <div class="total-banner">
+            <div>
+                <div class="lbl">Total Amount Paid</div>
+                <div style="font-size: 12px; opacity: 0.85;">Paid in full • Transaction Verified</div>
+            </div>
+            <div class="val">
+                ₹{{ payment.amount|floatformat:2 }}
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="receipt-footer">
+            <p>This is a computer-generated official receipt for Patil Hospital. No physical signature required.</p>
+            <p style="margin-top: 4px;">Thank you for choosing <strong>Patil Hospital</strong> for your healthcare needs. For queries, call +91 9876543210.</p>
+        </footer>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('download') === 'true' || urlParams.get('print') === 'true') {
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    window.print();
+                }, 500);
+            });
+        }
+    </script>
+</body>
+</html>

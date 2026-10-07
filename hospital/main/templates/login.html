@@ -1,0 +1,716 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Patil Hospital</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-light: #ccfbf1;
+            --accent: #2563eb;
+            --accent-dark: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #0f766e 50%, #1e3a8a 100%);
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #0e6eec;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px 16px;
+            color: var(--text-dark);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Glows */
+        .bg-glow-1,
+        .bg-glow-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: 0;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .bg-glow-1 {
+            width: 450px;
+            height: 450px;
+            background: #0d9488;
+            top: -100px;
+            left: -100px;
+            animation: float 12s infinite alternate ease-in-out;
+        }
+
+        .bg-glow-2 {
+            width: 500px;
+            height: 500px;
+            background: #3b82f6;
+            bottom: -150px;
+            right: -150px;
+            animation: float 15s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(40px, 40px) scale(1.1);
+            }
+        }
+
+        /* ================= LOGIN CONTAINER ================= */
+        .login-card {
+            position: relative;
+            z-index: 1;
+            width: 1000px;
+            max-width: 100%;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        /* ================= LEFT SIDE (BRANDING) ================= */
+        .login-left {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #0f766e 100%);
+            color: white;
+            padding: 50px 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #14b8a6, #2563eb);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 4px 14px rgba(20, 184, 166, 0.4);
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+        }
+
+        .brand-hero {
+            margin: 40px 0;
+        }
+
+        .brand-hero h1 {
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-hero p {
+            font-size: 15px;
+            line-height: 1.65;
+            color: #94a3b8;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(20, 184, 166, 0.2);
+            color: #2dd4bf;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .feature-text strong {
+            display: block;
+            font-size: 14px;
+            color: #f8fafc;
+        }
+
+        .feature-text span {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .brand-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #64748b;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ================= RIGHT SIDE (FORM) ================= */
+        .login-right {
+            padding: 48px 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #ffffff;
+        }
+
+        .form-header {
+            margin-bottom: 28px;
+        }
+
+        .form-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-header p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Role Pill Selector */
+        .role-selector-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-pills {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 14px;
+            margin-bottom: 22px;
+        }
+
+        .role-pill {
+            padding: 10px 8px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .role-pill.active {
+            background: #ffffff;
+            color: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .role-pill:hover:not(.active) {
+            color: #1e293b;
+        }
+
+        /* Input Group */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 7px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: #94a3b8;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-dark);
+            background: #f8fafc;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+        }
+
+        .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .toggle-password-btn:hover {
+            color: #334155;
+        }
+
+        /* Dismissible Alert Toast */
+        .alert-toast {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.4;
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            color: #991b1b;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 4px;
+            margin-left: 10px;
+            line-height: 1;
+            opacity: 0.7;
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(15, 118, 110, 0.3);
+            transition: all 0.25s ease;
+            margin-top: 6px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-dark) 100%);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Footer Links */
+        .auth-footer {
+            margin-top: 26px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+        }
+
+        .register-callout {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .register-callout a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 4px;
+            transition: color 0.2s;
+        }
+
+        .register-callout a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-dark);
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 860px) {
+            .login-card {
+                grid-template-columns: 1fr;
+            }
+
+            .login-left {
+                display: none;
+            }
+
+            .login-right {
+                padding: 36px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="login-card">
+
+        <!-- ================= LEFT SIDE (BRANDING) ================= -->
+        <div class="login-left">
+            <div>
+                <div class="brand-header">
+                    <div class="brand-logo-icon">┼</div>
+                    <div class="brand-title">Patil Hospital</div>
+                </div>
+
+                <div class="brand-hero">
+                    <h1>Healthcare Excellence & Smart Care</h1>
+                    <p>Access your secure hospital portal for real-time doctor schedules, patient history, and
+                        management operations.</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🛡️</div>
+                        <div class="feature-text">
+                            <strong>Role-Based Portal Access</strong>
+                            <span>Dedicated views for Patients, Doctors & Admins</span>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📅</div>
+                        <div class="feature-text">
+                            <strong>Smart Appointment Management</strong>
+                            <span>Real-time booking, prescriptions & test reports</span>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-text">
+                            <strong>End-to-End Data Security</strong>
+                            <span>Encrypted patient records & confidential history</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="brand-footer">
+                <span class="trust-badge">✓ Verified Portal</span>
+                <span>Patil Multi-Speciality Hospital</span>
+            </div>
+        </div>
+
+        <!-- ================= RIGHT SIDE (FORM) ================= -->
+        <div class="login-right">
+
+            <div class="form-header">
+                <h2>Sign In</h2>
+                <p>Select your account role and enter credentials to continue</p>
+            </div>
+
+            <form method="POST" action="{% url 'login' %}" id="loginForm">
+                {% csrf_token %}
+
+                <!-- Hidden Input for Selected Role -->
+                <input type="hidden" name="role" id="roleInput" value="patient">
+
+                <!-- Hidden Fallback Select for Form Validation -->
+                <select name="role" id="roleSelect" style="display: none;" required>
+                    <option value="patient" selected>Patient</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="admin">Admin</option>
+                </select>
+
+                <!-- ROLE PILLS -->
+                <span class="role-selector-label">Login As</span>
+                <div class="role-pills" role="tablist">
+                    <button type="button" class="role-pill active" data-role="patient"
+                        onclick="selectRole('patient', this)">
+                        <span>👤</span> Patient
+                    </button>
+                    <button type="button" class="role-pill" data-role="doctor" onclick="selectRole('doctor', this)">
+                        <span>👨‍⚕️</span> Doctor
+                    </button>
+                    <button type="button" class="role-pill" data-role="admin" onclick="selectRole('admin', this)">
+                        <span></span> Admin
+                    </button>
+                </div>
+
+                <!-- EMAIL INPUT -->
+                <div class="input-group">
+                    <label for="email" class="input-label">Gmail / Email</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                </path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </span>
+                        <input type="email" id="email" name="email" placeholder="e.g. user@gmail.com"
+                            autocomplete="email" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- PASSWORD INPUT -->
+                <div class="input-group">
+                    <label for="password" class="input-label">Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </span>
+                        <input type="password" id="password" name="password" placeholder="Enter your password"
+                            autocomplete="current-password" class="form-control" style="padding-right: 42px;" required>
+                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility()"
+                            title="Show/Hide Password" id="togglePasswordBtn">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MESSAGES ALERT BANNER (Filters out deletion messages) -->
+                {% if messages %}
+                {% for message in messages %}
+                {% if "deleted" not in message.message|lower and "profile not found" not in message.message|lower %}
+                <div class="alert-toast">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>⚠️</span>
+                        <span>{{ message }}</span>
+                    </div>
+                    <button type="button" class="alert-close" onclick="this.parentElement.remove()"
+                        title="Close">&times;</button>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+
+                <!-- SUBMIT BUTTON -->
+                <button type="submit" class="btn-submit">
+                    <span>Sign In to Portal</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <div class="register-callout">
+                    New Patient? <a href="{% url 'patient_register' %}">Register Account Here</a>
+                </div>
+                <a href="{% url 'home' %}" class="back-link">
+                    ← Return to Main Website
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function selectRole(role, btnElement) {
+            // Update active pill styling
+            document.querySelectorAll('.role-pill').forEach(pill => pill.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // Update hidden inputs
+            document.getElementById('roleInput').value = role;
+            document.getElementById('roleSelect').value = role;
+        }
+
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('password');
+            const toggleBtn = document.getElementById('togglePasswordBtn');
+
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                toggleBtn.textContent = '🙈';
+                toggleBtn.setAttribute('title', 'Hide Password');
+            } else {
+                pwdInput.type = 'password';
+                toggleBtn.textContent = '👁️';
+                toggleBtn.setAttribute('title', 'Show Password');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

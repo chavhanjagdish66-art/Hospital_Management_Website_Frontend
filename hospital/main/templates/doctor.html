@@ -1,0 +1,1433 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard | Patil Hospital</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #818cf8;
+            --primary-bg: #eef2ff;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --success-bg: #d1fae5;
+            --warning: #f59e0b;
+            --warning-bg: #fef3c7;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --info: #3b82f6;
+            --info-bg: #dbeafe;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px -2px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 25px -5px rgba(79,70,229,0.12);
+            --shadow-xl: 0 20px 30px -10px rgba(0,0,0,0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: var(--gray-800);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            height: 72px;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+            box-shadow: 0 4px 20px rgba(30, 27, 75, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ffffff, #e0e7ff);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .duty-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .duty-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .duty-dot.available {
+            background-color: #10b981;
+            box-shadow: 0 0 10px #10b981;
+        }
+        .duty-dot.unavailable {
+            background-color: #ef4444;
+            box-shadow: 0 0 10px #ef4444;
+        }
+
+        .profile-area {
+            position: relative;
+        }
+
+        .profile-btn {
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 6px 16px 6px 8px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .profile-btn:hover {
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .avatar-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 52px;
+            right: 0;
+            width: 240px;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--gray-100);
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 200;
+        }
+
+        .profile-dropdown.show {
+            display: flex;
+        }
+
+        .dropdown-header {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--gray-100);
+            margin-bottom: 4px;
+        }
+        .dropdown-header .name {
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: 14px;
+        }
+        .dropdown-header .email {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+            transition: background 0.15s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+        .dropdown-item.logout {
+            color: var(--danger);
+        }
+        .dropdown-item.logout:hover {
+            background: var(--danger-bg);
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1380px;
+            margin: 32px auto;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* FLASH MESSAGES */
+        .messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .alert {
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+        .alert-success { background: var(--success-bg); color: #065f46; border: 1px solid #a7f3d0; }
+        .alert-error, .alert-danger { background: var(--danger-bg); color: #991b1b; border: 1px solid #fecaca; }
+        .alert-warning { background: var(--warning-bg); color: #92400e; border: 1px solid #fde68a; }
+        .alert-info { background: var(--info-bg); color: #1e40af; border: 1px solid #bfdbfe; }
+
+        /* HERO CARD */
+        .hero-banner {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+            border-radius: var(--radius-xl);
+            padding: 36px 40px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            pointer-events: none;
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -60%;
+            right: 15%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 650px;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .hero-title {
+            font-size: 30px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary);
+        }
+        .btn-white:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-2px);
+        }
+
+        .hero-illustration {
+            position: relative;
+            z-index: 2;
+            font-size: 90px;
+            line-height: 1;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            user-select: none;
+        }
+
+        /* GRID SYSTEM FOR DASHBOARD */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 28px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* DOCTOR PROFILE CARD */
+        .profile-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-100);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            height: fit-content;
+        }
+
+        .profile-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .doctor-avatar-large {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.25);
+            flex-shrink: 0;
+        }
+
+        .doctor-head-info h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .doctor-badge-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .profile-details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .detail-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .detail-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-info label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-400);
+            margin-bottom: 2px;
+        }
+
+        .detail-info span {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .toggle-avail-box {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toggle-avail-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toggle-avail-info label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .toggle-avail-info span {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .toggle-btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            transition: transform 0.2s ease;
+        }
+        .toggle-btn-link:hover {
+            transform: scale(1.05);
+        }
+        .toggle-btn-link.turn-off {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .toggle-btn-link.turn-on {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* MAIN COLUMN */
+        .main-col {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* STATS CARDS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-100);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--gray-200);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-card.total .stat-icon { background: #eef2ff; color: #4f46e5; }
+        .stat-card.pending .stat-icon { background: #fef3c7; color: #d97706; }
+        .stat-card.confirmed .stat-icon { background: #dbeafe; color: #2563eb; }
+        .stat-card.completed .stat-icon { background: #d1fae5; color: #059669; }
+
+        .stat-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gray-900);
+            letter-spacing: -0.5px;
+        }
+
+        /* APPOINTMENTS SECTION */
+        .section-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-100);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .section-title-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .section-title-box h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+
+        .section-title-box p {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        /* SEARCH & FILTER BAR */
+        .filter-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding-bottom: 8px;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 280px;
+            flex: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 42px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-200);
+            background: var(--gray-50);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(79,70,229,0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 16px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gray-100);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 7px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-600);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--gray-900);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* TABLE STYLING */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-200);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        th {
+            padding: 14px 18px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--gray-100);
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        td {
+            padding: 16px 18px;
+            font-size: 14px;
+            color: var(--gray-700);
+            vertical-align: top;
+        }
+
+        /* PATIENT CELL */
+        .patient-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .patient-avatar-mini {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .patient-meta {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .patient-name-str {
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: 14px;
+        }
+
+        .patient-email-str {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-bottom: 6px;
+        }
+
+        /* DETAILS TOGGLE */
+        .patient-details-toggle {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s ease;
+        }
+        .patient-details-toggle:hover {
+            color: var(--primary-dark);
+        }
+
+        .patient-expanded-box {
+            margin-top: 8px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .patient-expanded-box div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .patient-expanded-box label {
+            font-weight: 700;
+            color: var(--gray-400);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .patient-expanded-box span {
+            color: var(--gray-800);
+            font-weight: 600;
+        }
+
+        /* STATUS BADGES */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-pill.pending { background: var(--warning-bg); color: #b45309; }
+        .status-pill.confirmed { background: var(--info-bg); color: #1d4ed8; }
+        .status-pill.completed { background: var(--success-bg); color: #047857; }
+        .status-pill.rejected, .status-pill.cancelled { background: var(--danger-bg); color: #b91c1c; }
+
+        /* ACTION BUTTONS GROUP */
+        .actions-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .action-btn-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .act-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .act-btn-confirm { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+        .act-btn-confirm:hover { background: #bfdbfe; }
+
+        .act-btn-reject { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .act-btn-reject:hover { background: #fecaca; }
+
+        .act-btn-complete { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .act-btn-complete:hover { background: #a7f3d0; }
+
+        .care-tools-header {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-400);
+            margin-top: 4px;
+        }
+
+        .act-btn-history { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
+        .act-btn-history:hover { background: #e2e8f0; }
+
+        .act-btn-rx { background: #fae8ff; color: #86198f; border: 1px solid #f5d0fe; }
+        .act-btn-rx:hover { background: #f5d0fe; }
+
+        .act-btn-report { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+        .act-btn-report:hover { background: #bae6fd; }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--gray-500);
+            font-size: 13px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-icon">🏥</div>
+            <span>Patil Hospital</span>
+        </div>
+
+        <div class="nav-actions">
+            <!-- DUTY BADGE -->
+            <div class="duty-badge">
+                {% if doctor.available %}
+                    <span class="duty-dot available"></span>
+                    <span>On Duty</span>
+                {% else %}
+                    <span class="duty-dot unavailable"></span>
+                    <span>Off Duty</span>
+                {% endif %}
+            </div>
+
+            <!-- PROFILE MENU -->
+            <div class="profile-area">
+                <button class="profile-btn" onclick="toggleProfileMenu()">
+                    <div class="avatar-circle">
+                        {% if doctor.profile_image %}
+                            <img src="{{ doctor.profile_image.url }}" alt="Dr. {{ doctor.name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                            {{ doctor.name|slice:":1"|upper }}
+                        {% endif %}
+                    </div>
+                    <span>Dr. {{ doctor.name }}</span>
+                    <span style="font-size: 10px; opacity: 0.8;">▼</span>
+                </button>
+
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <div class="name">Dr. {{ doctor.name }}</div>
+                        <div class="email">{{ doctor.email }}</div>
+                    </div>
+                    <a href="#doctorProfileCard" class="dropdown-item">
+                        👤 My Profile
+                    </a>
+                    <a href="{% url 'doctor_profile_change' %}" class="dropdown-item">
+                        ✏️ Edit Profile
+                    </a>
+                    <a href="{% url 'toggle_doctor_availability' doctor.id %}" class="dropdown-item">
+                        ⚡ Toggle Duty Status
+                    </a>
+                    <div style="border-top: 1px solid var(--gray-100); margin: 4px 0;"></div>
+                    <a href="{% url 'logout' %}" class="dropdown-item logout">
+                        🚪 Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTAINER -->
+    <main class="container">
+
+        <!-- MESSAGES -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <span>{{ message }}</span>
+                    <button onclick="this.parentElement.remove()" style="background:none; border:none; cursor:pointer; font-weight:bold; color:inherit;">✕</button>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- HERO WELCOME BANNER -->
+        <section class="hero-banner">
+            <div class="hero-content">
+                <div class="hero-tag">✨ Doctor Dashboard</div>
+                <h1 class="hero-title">Welcome back, Dr. {{ doctor.name }}! 👋</h1>
+                <p class="hero-subtitle">
+                    Department of {{ doctor.department.name|default:"General Medicine" }} | {{ doctor.specialization|default:"Medical Specialist" }}
+                </p>
+                <div class="hero-actions">
+                    <a href="{% url 'toggle_doctor_availability' doctor.id %}" class="btn btn-white">
+                        {% if doctor.available %}
+                            🔴 Set as Unavailable
+                        {% else %}
+                            🟢 Set as Available
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'doctor_profile_change' %}" class="btn btn-glass">
+                        ✏️ Edit Profile
+                    </a>
+                </div>
+            </div>
+            <div class="hero-illustration">
+                🩺
+            </div>
+        </section>
+
+        <!-- DASHBOARD GRID -->
+        <div class="dashboard-grid">
+
+            <!-- SIDEBAR: DOCTOR PROFILE CARD -->
+            <aside class="profile-card" id="doctorProfileCard">
+                <div class="profile-card-header">
+                    <div class="doctor-avatar-large">
+                        {% if doctor.profile_image %}
+                            <img src="{{ doctor.profile_image.url }}" alt="Dr. {{ doctor.name }}" style="width: 100%; height: 100%; border-radius: 20px; object-fit: cover;">
+                        {% else %}
+                            {{ doctor.name|slice:":1"|upper }}
+                        {% endif %}
+                    </div>
+                    <div class="doctor-head-info">
+                        <h3>Dr. {{ doctor.name }}</h3>
+                        <span class="doctor-badge-tag">
+                            {{ doctor.specialization|default:"Specialist" }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="profile-details-list">
+                    <div class="detail-row">
+                        <div class="detail-icon">📧</div>
+                        <div class="detail-info">
+                            <label>Email Address</label>
+                            <span>{{ doctor.email }}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-icon">📞</div>
+                        <div class="detail-info">
+                            <label>Phone Contact</label>
+                            <span>{{ doctor.phone|default:"Not Provided" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-icon">🎓</div>
+                        <div class="detail-info">
+                            <label>Qualification</label>
+                            <span>{{ doctor.qualification|default:"MBBS" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-icon">⭐</div>
+                        <div class="detail-info">
+                            <label>Experience</label>
+                            <span>{{ doctor.experience|default:"0" }} Years</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-icon">🏥</div>
+                        <div class="detail-info">
+                            <label>Department</label>
+                            <span>{{ doctor.department.name|default:"Not Assigned" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DUTY TOGGLE BOX -->
+                <div class="toggle-avail-box">
+                    <div class="toggle-avail-info">
+                        <label>Availability Status</label>
+                        <span>
+                            {% if doctor.available %}
+                                🟢 Currently Available
+                            {% else %}
+                                🔴 Currently Unavailable
+                            {% endif %}
+                        </span>
+                    </div>
+                    <a href="{% url 'toggle_doctor_availability' doctor.id %}" 
+                       class="toggle-btn-link {% if doctor.available %}turn-off{% else %}turn-on{% endif %}">
+                        {% if doctor.available %}
+                            Disable
+                        {% else %}
+                            Enable
+                        {% endif %}
+                    </a>
+                </div>
+            </aside>
+
+            <!-- MAIN COLUMN -->
+            <div class="main-col">
+
+                <!-- STATS CARDS GRID -->
+                <div class="stats-grid">
+                    <div class="stat-card total">
+                        <div class="stat-header">
+                            <span class="stat-title">Total</span>
+                            <div class="stat-icon">📅</div>
+                        </div>
+                        <div class="stat-number">{{ stats.total }}</div>
+                    </div>
+
+                    <div class="stat-card pending">
+                        <div class="stat-header">
+                            <span class="stat-title">Pending</span>
+                            <div class="stat-icon">⏳</div>
+                        </div>
+                        <div class="stat-number">{{ stats.pending }}</div>
+                    </div>
+
+                    <div class="stat-card confirmed">
+                        <div class="stat-header">
+                            <span class="stat-title">Confirmed</span>
+                            <div class="stat-icon">✅</div>
+                        </div>
+                        <div class="stat-number">{{ stats.confirmed }}</div>
+                    </div>
+
+                    <div class="stat-card completed">
+                        <div class="stat-header">
+                            <span class="stat-title">Completed</span>
+                            <div class="stat-icon">✔</div>
+                        </div>
+                        <div class="stat-number">{{ stats.completed }}</div>
+                    </div>
+                </div>
+
+                <!-- PATIENT APPOINTMENTS SECTION -->
+                <section class="section-card" id="appointments">
+                    <div class="section-top-bar">
+                        <div class="section-title-box">
+                            <div class="section-icon-box">🗓️</div>
+                            <div>
+                                <h2>Patient Appointments</h2>
+                                <p>Manage consultation schedules & patient medical records</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEARCH & FILTER BAR -->
+                    <div class="filter-controls">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="appointmentSearch" placeholder="Search patient name, email, or reason..." onkeyup="filterAppointments()">
+                        </div>
+
+                        <div class="filter-tabs">
+                            <button class="tab-btn active" onclick="setFilterTab('all', this)">All ({{ appointments|length }})</button>
+                            <button class="tab-btn" onclick="setFilterTab('pending', this)">Pending ({{ stats.pending }})</button>
+                            <button class="tab-btn" onclick="setFilterTab('confirmed', this)">Confirmed ({{ stats.confirmed }})</button>
+                            <button class="tab-btn" onclick="setFilterTab('completed', this)">Completed ({{ stats.completed }})</button>
+                        </div>
+                    </div>
+
+                    <!-- TABLE RESPONSIVE -->
+                    <div class="table-responsive">
+                        <table id="appointmentsTable">
+                            <thead>
+                                <tr>
+                                    <th>Patient Details</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Actions & Care</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                <tr data-status="{{ appointment.status|lower }}">
+                                    <!-- PATIENT DETAILS -->
+                                    <td>
+                                        <div class="patient-cell">
+                                            <div class="patient-avatar-mini">
+                                                {{ appointment.patient.name|slice:":1"|upper }}
+                                            </div>
+                                            <div class="patient-meta">
+                                                <span class="patient-name-str">{{ appointment.patient.name }}</span>
+                                                <span class="patient-email-str">{{ appointment.patient.email }}</span>
+                                                
+                                                <details class="patient-details-toggle">
+                                                    <summary>🔍 View Patient Vitals</summary>
+                                                    <div class="patient-expanded-box">
+                                                        <div>
+                                                            <label>Phone</label>
+                                                            <span>{{ appointment.patient.phone|default:"-" }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <label>Age / Sex</label>
+                                                            <span>{{ appointment.patient.age|default:"-" }} yrs / {{ appointment.patient.gender|default:"-" }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <label>Blood Group</label>
+                                                            <span>{{ appointment.patient.blood_group|default:"-" }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <label>Address</label>
+                                                            <span>{{ appointment.patient.address|default:"-" }}</span>
+                                                        </div>
+                                                        <div style="grid-column: span 2;">
+                                                            <label>Medical History</label>
+                                                            <span>{{ appointment.patient.medical_history|default:"No history recorded" }}</span>
+                                                        </div>
+                                                    </div>
+                                                </details>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- DATE -->
+                                    <td style="font-weight: 600; white-space: nowrap;">
+                                        {{ appointment.appointment_date|date:"d M Y" }}
+                                    </td>
+
+                                    <!-- TIME -->
+                                    <td style="font-weight: 600; white-space: nowrap; color: var(--primary);">
+                                        {{ appointment.appointment_time|time:"h:i A" }}
+                                    </td>
+
+                                    <!-- REASON -->
+                                    <td style="max-width: 200px;">
+                                        {{ appointment.reason|default:"General Checkup" }}
+                                    </td>
+
+                                    <!-- STATUS -->
+                                    <td>
+                                        {% if appointment.status == "Pending" %}
+                                            <span class="status-pill pending">⏳ Pending</span>
+                                        {% elif appointment.status == "Confirmed" %}
+                                            <span class="status-pill confirmed">✅ Confirmed</span>
+                                        {% elif appointment.status == "Completed" %}
+                                            <span class="status-pill completed">✔ Completed</span>
+                                        {% elif appointment.status == "Rejected" %}
+                                            <span class="status-pill rejected">✕ Rejected</span>
+                                        {% elif appointment.status == "Cancelled" %}
+                                            <span class="status-pill cancelled">✕ Cancelled</span>
+                                        {% else %}
+                                            <span class="status-pill">{{ appointment.status }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- ACTIONS & CARE -->
+                                    <td>
+                                        <div class="actions-cell">
+                                            <!-- STATUS UPDATE BUTTONS -->
+                                            {% if appointment.status == "Pending" %}
+                                                <div class="action-btn-row">
+                                                    <a href="{% url 'confirm_appointment' appointment.id %}" class="act-btn act-btn-confirm">
+                                                        ✓ Confirm
+                                                    </a>
+                                                    <a href="{% url 'reject_appointment' appointment.id %}" class="act-btn act-btn-reject">
+                                                        ✕ Reject
+                                                    </a>
+                                                </div>
+                                            {% elif appointment.status == "Confirmed" %}
+                                                <div class="action-btn-row">
+                                                    <a href="{% url 'complete_appointment' appointment.id %}" class="act-btn act-btn-complete">
+                                                        ✓ Mark Complete
+                                                    </a>
+                                                </div>
+                                            {% endif %}
+
+                                            <!-- PATIENT CARE TOOLS -->
+                                            <div class="care-tools-header">Patient Care</div>
+                                            <div class="action-btn-row">
+                                                <a href="{% url 'medical_history' appointment.patient.id %}" class="act-btn act-btn-history">
+                                                    📋 History
+                                                </a>
+                                                <a href="{% url 'add_prescription' appointment.id %}" class="act-btn act-btn-rx">
+                                                    💊 Prescription
+                                                </a>
+                                                <a href="{% url 'upload_test_report' appointment.id %}" class="act-btn act-btn-report">
+                                                    🧪 Report
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="empty-state">
+                                            <div class="empty-icon">📅</div>
+                                            <h4>No Appointments Found</h4>
+                                            <p>There are no patient appointments matching your current criteria.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            © 2026 Patil Hospital — Doctor Portal & Clinical Management System
+        </footer>
+
+    </main>
+
+    <!-- INTERACTIVE SCRIPTS -->
+    <script>
+        // Profile Menu Dropdown
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(event) {
+            const area = document.querySelector('.profile-area');
+            const dropdown = document.getElementById('profileDropdown');
+            if (area && !area.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Filter Tabs
+        let activeTab = 'all';
+        function setFilterTab(status, btnElement) {
+            activeTab = status;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            filterAppointments();
+        }
+
+        // Live Search & Filter
+        function filterAppointments() {
+            const query = document.getElementById('appointmentSearch').value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#appointmentsTable tbody tr');
+
+            rows.forEach(row => {
+                const statusAttr = row.getAttribute('data-status') || '';
+                const text = row.innerText.toLowerCase();
+
+                const matchesTab = (activeTab === 'all') || (statusAttr === activeTab);
+                const matchesQuery = text.includes(query);
+
+                if (matchesTab && matchesQuery) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

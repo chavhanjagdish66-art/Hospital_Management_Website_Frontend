@@ -1,0 +1,742 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Medical Record | Patil Hospital</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                linear-gradient(135deg, #eef2ff, #f8fafc);
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        aside {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+
+            background:
+                linear-gradient(180deg, #4f46e5, #312e81);
+
+            color: white;
+            padding: 25px 16px;
+
+            box-shadow:
+                5px 0 25px rgba(0,0,0,0.12);
+
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 21px;
+            font-weight: 800;
+
+            padding: 10px 8px 25px;
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.15);
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: white;
+            color: #4f46e5;
+
+            border-radius: 12px;
+
+            font-size: 22px;
+
+            box-shadow:
+                0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .side-label {
+            margin: 25px 10px 10px;
+
+            font-size: 10px;
+            letter-spacing: 1.8px;
+
+            font-weight: bold;
+
+            color:
+                rgba(255,255,255,0.60);
+        }
+
+        aside a {
+            display: block;
+
+            padding: 13px 15px;
+            margin: 6px 0;
+
+            border-radius: 10px;
+
+            color:
+                rgba(255,255,255,0.92);
+
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            transition: 0.25s;
+        }
+
+        aside a:hover {
+            background:
+                rgba(255,255,255,0.13);
+
+            transform:
+                translateX(4px);
+        }
+
+        aside a.active {
+            background: white;
+            color: #4f46e5;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 7px 20px rgba(0,0,0,0.15);
+        }
+
+        /* ================= MAIN ================= */
+
+        .dash-main {
+            margin-left: 250px;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        /* ================= HEADER ================= */
+
+        .dash-head {
+            background: rgba(255,255,255,0.95);
+
+            padding: 24px 28px;
+
+            border-radius: 18px;
+
+            margin-bottom: 25px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            border: 1px solid #e5e7eb;
+
+            box-shadow:
+                0 8px 30px rgba(0,0,0,0.06);
+        }
+
+        .eyebrow {
+            display: block;
+
+            color: #4f46e5;
+
+            font-size: 10px;
+
+            letter-spacing: 1.8px;
+
+            font-weight: bold;
+
+            margin-bottom: 6px;
+        }
+
+        .dash-head h1 {
+            font-size: 28px;
+            color: #111827;
+        }
+
+        .profile {
+            background: #eef2ff;
+
+            color: #4f46e5;
+
+            padding: 11px 18px;
+
+            border-radius: 30px;
+
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* ================= PANEL ================= */
+
+        .panel {
+            background: white;
+
+            padding: 28px;
+
+            border-radius: 18px;
+
+            margin-bottom: 22px;
+
+            border: 1px solid #e5e7eb;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.05);
+        }
+
+        .panel h2 {
+            font-size: 21px;
+
+            color: #111827;
+
+            margin-bottom: 22px;
+
+            padding-bottom: 14px;
+
+            border-bottom:
+                1px solid #edf0f5;
+        }
+
+        /* ================= PATIENT INFO ================= */
+
+        .patient-info {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 16px;
+        }
+
+        .info-box {
+            background:
+                linear-gradient(135deg,#f8fafc,#eef2ff);
+
+            padding: 18px;
+
+            border-radius: 13px;
+
+            border:
+                1px solid #e5e7eb;
+
+            transition: 0.2s;
+        }
+
+        .info-box:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.07);
+        }
+
+        .info-box span {
+            display: block;
+
+            color: #6b7280;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            font-weight: bold;
+
+            letter-spacing: 0.8px;
+
+            margin-bottom: 7px;
+        }
+
+        .info-box strong {
+            color: #111827;
+            font-size: 14px;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #374151;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        textarea {
+            width: 100%;
+
+            min-height: 125px;
+
+            resize: vertical;
+
+            padding: 15px;
+
+            border:
+                1px solid #d7dce5;
+
+            border-radius: 12px;
+
+            background: #fbfcfe;
+
+            color: #111827;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+
+            outline: none;
+
+            transition: 0.25s;
+        }
+
+        textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        textarea:focus {
+            background: white;
+
+            border-color: #4f46e5;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(79,70,229,0.10);
+        }
+
+        #symptoms {
+            border-left: 5px solid #f59e0b;
+        }
+
+        #diagnosis {
+            border-left: 5px solid #4f46e5;
+        }
+
+        #treatment {
+            border-left: 5px solid #10b981;
+        }
+
+        #notes {
+            border-left: 5px solid #06b6d4;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .button-row {
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 10px;
+        }
+
+        .primary-btn {
+            border: none;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #6366f1
+                );
+
+            color: white;
+
+            padding: 14px 22px;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 7px 18px
+                rgba(79,70,229,0.22);
+
+            transition: 0.25s;
+        }
+
+        .primary-btn:hover {
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(79,70,229,0.30);
+        }
+
+        .table-btn {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 14px 22px;
+
+            background: #f3f4f6;
+
+            color: #374151;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            transition: 0.25s;
+        }
+
+        .table-btn:hover {
+            background: #e5e7eb;
+
+            transform:
+                translateY(-2px);
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:900px) {
+
+            aside {
+                width: 210px;
+            }
+
+            .dash-main {
+                margin-left: 210px;
+                padding: 20px;
+            }
+
+            .patient-info {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+        }
+
+        @media(max-width:650px) {
+
+            aside {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+
+                padding: 15px;
+            }
+
+            .brand {
+                padding-bottom: 15px;
+            }
+
+            aside a {
+                display: inline-block;
+
+                padding: 9px 11px;
+
+                margin: 3px;
+
+                font-size: 12px;
+            }
+
+            .dash-main {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .dash-head {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .dash-head h1 {
+                font-size: 23px;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .patient-info {
+                grid-template-columns: 1fr;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .primary-btn,
+            .table-btn {
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <aside>
+
+        <div class="brand">
+
+            <span class="brand-icon">
+                ✚
+            </span>
+
+            Patil Hospital
+
+        </div>
+
+        <div class="side-label">
+            DOCTOR PANEL
+        </div>
+
+        <a href="{% url 'doctor_dashboard' %}">
+            ▦ Dashboard
+        </a>
+
+        <a class="active">
+            📋 Medical Record
+        </a>
+
+        <a href="{% url 'doctor_dashboard' %}">
+            💊 Rx Prescription
+        </a>
+
+        <a href="{% url 'doctor_dashboard' %}">
+            🧪 Test Reports
+        </a>
+
+        <a href="{% url 'logout' %}">
+            ↪ Logout
+        </a>
+
+    </aside>
+
+
+    <section class="dash-main">
+
+        <header class="dash-head">
+
+            <div>
+
+                <span class="eyebrow">
+                    DOCTOR PANEL
+                </span>
+
+                <h1>
+                    Medical Record
+                </h1>
+
+            </div>
+
+            <div class="profile">
+                🩺 Doctor
+            </div>
+
+        </header>
+
+
+        <!-- PATIENT -->
+
+        <div class="panel">
+
+            <h2>
+                👤 Patient Information
+            </h2>
+
+            <div class="patient-info">
+
+                <div class="info-box">
+                    <span>Patient Name</span>
+                    <strong>
+                        {{ appointment.patient.name }}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Age</span>
+                    <strong>
+                        {{ appointment.patient.age|default:"-" }}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Gender</span>
+                    <strong>
+                        {{ appointment.patient.gender|default:"-" }}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Blood Group</span>
+                    <strong>
+                        {{ appointment.patient.blood_group|default:"-" }}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Appointment Date</span>
+                    <strong>
+                        {{ appointment.appointment_date }}
+                    </strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Appointment Time</span>
+                    <strong>
+                        {{ appointment.appointment_time }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <div class="panel">
+
+            <h2>
+                🩺 Add Medical Record
+            </h2>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label for="symptoms">
+                        Symptoms
+                        <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        id="symptoms"
+                        name="symptoms"
+                        placeholder="Enter patient's symptoms..."
+                        required></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="diagnosis">
+                        Diagnosis
+                        <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        id="diagnosis"
+                        name="diagnosis"
+                        placeholder="Enter diagnosis..."
+                        required></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="treatment">
+                        Treatment
+                    </label>
+
+                    <textarea
+                        id="treatment"
+                        name="treatment"
+                        placeholder="Enter treatment / medicines / recommendations..."></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="notes">
+                        Doctor's Notes
+                    </label>
+
+                    <textarea
+                        id="notes"
+                        name="notes"
+                        placeholder="Enter additional instructions or notes for the patient..."></textarea>
+
+                </div>
+
+
+                <div class="button-row">
+
+                    <button
+                        type="submit"
+                        class="primary-btn">
+
+                        💾 Save Medical Record
+
+                    </button>
+
+                    <a
+                        href="{% url 'doctor_dashboard' %}"
+                        class="table-btn">
+
+                        ← Back to Dashboard
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </section>
+
+</body>
+
+</html>

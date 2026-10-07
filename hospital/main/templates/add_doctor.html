@@ -1,0 +1,627 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Doctor | Patil Hospital Admin</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-light: #99f6e4;
+            --primary-bg: #ccfbf1;
+            --secondary: #4f46e5;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 14px -2px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 25px -5px rgba(15,118,110,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: var(--gray-800);
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* SIDEBAR */
+        aside {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0f766e 0%, #115e59 100%);
+            color: white;
+            padding: 28px 20px;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 800;
+            padding-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            margin-bottom: 24px;
+        }
+
+        .brand-icon {
+            background: white;
+            color: #0f766e;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+        }
+
+        .side-label {
+            font-size: 11px;
+            color: var(--primary-light);
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            margin: 16px 8px 10px;
+            text-transform: uppercase;
+        }
+
+        aside a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #d1fae5;
+            padding: 12px 16px;
+            margin: 4px 0;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        aside a:hover, aside a.active {
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+            transform: translateX(3px);
+        }
+
+        /* MAIN CONTENT AREA */
+        .dash-main {
+            margin-left: 260px;
+            padding: 36px 40px;
+            min-height: 100vh;
+        }
+
+        .dash-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .eyebrow {
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .dash-head h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-top: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--gray-700);
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        /* MESSAGES */
+        .alert-box {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* FORM CONTAINER CARD */
+        .form-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 36px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .section-header h3 {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px 24px;
+        }
+
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 900px) {
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-700);
+        }
+
+        label .req {
+            color: #ef4444;
+            margin-left: 2px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-300);
+            background: var(--gray-50);
+            font-size: 14px;
+            color: var(--gray-900);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+        }
+
+        /* PROFILE PHOTO UPLOAD BOX */
+        .photo-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--gray-50);
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            transition: border-color 0.2s ease;
+        }
+
+        .photo-upload-container:hover {
+            border-color: var(--primary);
+        }
+
+        .photo-preview-box {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0f766e, #115e59);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 800;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .photo-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-upload-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .photo-upload-info label {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-700);
+            width: fit-content;
+            transition: all 0.2s ease;
+        }
+
+        .photo-upload-info label:hover {
+            background: var(--primary-bg);
+            color: var(--primary);
+            border-color: var(--primary-light);
+        }
+
+        .photo-upload-info input[type="file"] {
+            display: none;
+        }
+
+        .photo-hint {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        /* ACTION FOOTER */
+        .form-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 14px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+            color: white;
+            padding: 12px 28px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(15, 118, 110, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4);
+        }
+
+        .btn-cancel {
+            background: white;
+            color: var(--gray-600);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid var(--gray-300);
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside>
+        <div class="brand">
+            <span class="brand-icon">✚</span>
+            Patil Hospital
+        </div>
+
+        <div class="side-label">ADMIN PORTAL</div>
+
+        <a href="{% url 'admin_dashboard' %}">▦ Dashboard</a>
+        <a href="{% url 'admin_doctors_list' %}" class="active">👨‍⚕️ Doctors List</a>
+        <a href="{% url 'admin_patients_list' %}">👤 Patients List</a>
+        <a href="{% url 'admin_appointments_list' %}">📅 Appointments List</a>
+        <a href="{% url 'logout' %}" style="margin-top: 30px; color: #fca5a5;">↪ Logout</a>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dash-main">
+        <header class="dash-head">
+            <div>
+                <span class="eyebrow">DOCTOR MANAGEMENT</span>
+                <h1>➕ Register New Doctor</h1>
+            </div>
+            <a href="{% url 'admin_doctors_list' %}" class="btn-back">
+                ← Back to Doctors List
+            </a>
+        </header>
+
+        <!-- MESSAGES -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert-box">
+                    <span>{{ message }}</span>
+                    <button onclick="this.parentElement.remove()" style="background:none; border:none; cursor:pointer; font-weight:bold; color:inherit;">✕</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- FORM CARD -->
+        <div class="form-card">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- SECTION 1: PERSONAL & ACCOUNT INFO -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">👤</div>
+                        <h3>Personal & Account Information</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Doctor Full Name <span class="req">*</span></label>
+                            <input type="text" id="name" name="name" placeholder="e.g. Dr. Jagdish Chavhan" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address (Login Username) <span class="req">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="doctor@patilhospital.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="req">*</span></label>
+                            <input type="text" id="phone" name="phone" placeholder="+91 9876543210" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Doctor Portal Login Password <span class="req">*</span></label>
+                            <input type="password" id="password" name="password" placeholder="Create strong login password" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: MEDICAL & PROFESSIONAL DETAILS -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">🩺</div>
+                        <h3>Medical & Professional Details</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="department">Hospital Department</label>
+                            <select id="department" name="department">
+                                <option value="">Select Department (Optional)</option>
+                                {% for dept in departments %}
+                                    <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="specialization">Specialization <span class="req">*</span></label>
+                            <input type="text" id="specialization" name="specialization" placeholder="e.g. Cardiologist, Neurologist, Orthopedic" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="qualification">Medical Qualification <span class="req">*</span></label>
+                            <input type="text" id="qualification" name="qualification" placeholder="e.g. MBBS, MD, MS, FRCS" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="experience">Experience (Years) <span class="req">*</span></label>
+                            <input type="number" id="experience" name="experience" min="0" value="5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="consultation_fee">Consultation Fee (₹) <span class="req">*</span></label>
+                            <input type="number" id="consultation_fee" name="consultation_fee" min="0" step="10" placeholder="500" value="500" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: DUTY SCHEDULE & SHIFT TIMINGS -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">⏰</div>
+                        <h3>Duty Schedule & Availability Hours</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="available_days">Available Working Days</label>
+                            <select id="available_days" name="available_days">
+                                <option value="Mon-Fri">Monday to Friday</option>
+                                <option value="Mon-Sat" selected>Monday to Saturday</option>
+                                <option value="Mon-Sun">Monday to Sunday (All Days)</option>
+                                <option value="Weekends">Weekends Only (Sat-Sun)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="available_time_start">Shift Start Time</label>
+                            <input type="time" id="available_time_start" name="available_time_start" value="09:00">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="available_time_end">Shift End Time</label>
+                            <input type="time" id="available_time_end" name="available_time_end" value="17:00">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: PROFILE PHOTO & BIOGRAPHY -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">📸</div>
+                        <h3>Profile Picture & Doctor Biography</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Doctor Profile Photo</label>
+                            <div class="photo-upload-container">
+                                <div class="photo-preview-box" id="previewContainer">
+                                    <span id="previewInitials">👨‍⚕️</span>
+                                </div>
+                                <div class="photo-upload-info">
+                                    <label for="profile_image">
+                                        📁 Choose Photo File
+                                    </label>
+                                    <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewPhoto(this)">
+                                    <span class="photo-hint">Supported formats: JPG, PNG, WEBP (Max size 5MB)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="bio">Doctor Biography / Summary</label>
+                            <textarea id="bio" name="bio" rows="4" placeholder="Enter doctor background, achievements, and patient care details..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM ACTIONS -->
+                <div class="form-actions">
+                    <a href="{% url 'admin_doctors_list' %}" class="btn-cancel">Cancel</a>
+                    <button type="submit" class="btn-submit">
+                        ➕ Save & Register Doctor
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <!-- PHOTO PREVIEW SCRIPT -->
+    <script>
+        function previewPhoto(input) {
+            const previewContainer = document.getElementById('previewContainer');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>

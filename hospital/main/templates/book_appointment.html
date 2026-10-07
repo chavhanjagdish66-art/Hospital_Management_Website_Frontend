@@ -1,0 +1,616 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment | Patil Hospital</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-light: #ccfbf1;
+            --accent: #0284c7;
+            --success: #10b981;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #f8fafc 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* HEADER BANNER */
+        .header-banner {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 24px;
+            padding: 32px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 12px 30px rgba(15, 118, 110, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-text h1 {
+            font-size: 28px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-text p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ALERTS */
+        .messages {
+            margin-bottom: 24px;
+        }
+
+        .alert {
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .alert-success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+
+        /* MAIN FORM CONTAINER */
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 35px 40px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* DEPARTMENT FILTER PILLS */
+        .dept-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .dept-pill {
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .dept-pill.active, .dept-pill:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* DOCTORS TABLE FORMAT */
+        .table-wrapper {
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .doctors-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .doctors-table th {
+            background: #f8fafc;
+            padding: 16px 20px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .doctors-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            transition: background 0.2s ease;
+        }
+
+        .doctors-table tr {
+            cursor: pointer;
+        }
+
+        .doctors-table tr:hover td {
+            background: #f0fdfa;
+        }
+
+        .doctors-table tr.selected td {
+            background: #ccfbf1;
+        }
+
+        .doctor-cell {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .doc-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(15, 118, 110, 0.2);
+        }
+
+        .doc-name {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .doc-qual {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .badge-spec {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .badge-dept {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .fee-tag {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .btn-select-doc {
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+        }
+
+        .doctors-table tr.selected .btn-select-doc {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* FORM INPUTS SECTION */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        label span.req { color: #ef4444; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-dark);
+            background: #ffffff;
+            outline: none;
+            transition: border 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* SUBMIT BUTTON AREA */
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .btn-submit {
+            padding: 16px 36px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(15, 118, 110, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(15, 118, 110, 0.35);
+        }
+
+        .btn-cancel {
+            padding: 16px 28px;
+            background: #f1f5f9;
+            color: var(--text-dark);
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-cancel:hover { background: #e2e8f0; }
+
+        @media (max-width: 768px) {
+            .form-card { padding: 24px 20px; }
+            .header-banner { padding: 24px; flex-direction: column; gap: 15px; text-align: center; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- HEADER BANNER -->
+        <div class="header-banner">
+            <div class="header-text">
+                <h1>📅 Book Appointment</h1>
+                <p>Schedule your doctor consultation at Patil Hospital</p>
+            </div>
+            <a href="{% url 'patient_dashboard' %}" class="btn-back">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+        <!-- MESSAGES -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                {% if message.tags == 'error' %}⚠️{% else %}✓{% endif %}
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-card">
+            
+            <!-- SECTION 1: DOCTOR TABLE SELECTION -->
+            <div class="section-header">
+                <div class="section-title">
+                    <span>🩺</span> Step 1: Select Specialist Doctor
+                </div>
+            </div>
+
+            <!-- DEPARTMENT & AVAILABILITY FILTERS -->
+            <div class="dept-filters">
+                <div class="dept-pill active" onclick="filterDoctors('all', this)">All Doctors</div>
+                <div class="dept-pill" onclick="filterDoctorsByAvail('available', this)">🟢 Available Doctors</div>
+                <div class="dept-pill" onclick="filterDoctorsByAvail('unavailable', this)">🔴 Unavailable Doctors</div>
+                {% for dept in departments %}
+                <div class="dept-pill" onclick="filterDoctors('{{ dept.name|slugify }}', this)">
+                    🏥 {{ dept.name }}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- DOCTORS TABLE -->
+            <div class="table-wrapper">
+                <table class="doctors-table">
+                    <thead>
+                        <tr>
+                            <th>Doctor Name & Qualification</th>
+                            <th>Specialization</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Consultation Fee</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctorsTableBody">
+                        {% for doctor in doctors %}
+                        <tr class="doc-row {% if forloop.first %}selected{% endif %}" 
+                            data-dept="{{ doctor.department.name|slugify }}"
+                            data-avail="{% if doctor.available %}available{% else %}unavailable{% endif %}"
+                            data-doc-id="{{ doctor.id }}"
+                            onclick="selectDoctorRow(this, '{{ doctor.id }}')">
+                            <td>
+                                <div class="doctor-cell">
+                                    <input type="radio" name="doctor_radio" value="{{ doctor.id }}" {% if forloop.first %}checked{% endif %} style="width: auto; cursor: pointer;">
+                                    <div class="doc-avatar" style="overflow: hidden;">
+                                        {% if doctor.profile_image %}
+                                            <img src="{{ doctor.profile_image.url }}" alt="{{ doctor.name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                                        {% else %}
+                                            {{ doctor.name|slice:":1"|upper }}
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <div class="doc-name">Dr. {{ doctor.name }}</div>
+                                        <div class="doc-qual">{{ doctor.qualification|default:"Specialist Physician" }} • {{ doctor.experience|default:"5" }} Yrs Exp</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-spec">🩺 {{ doctor.specialization|default:"General Medicine" }}</span>
+                            </td>
+                            <td>
+                                <span class="badge-dept">🏥 {{ doctor.department.name|default:"General" }}</span>
+                            </td>
+                            <td>
+                                {% if doctor.available %}
+                                <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: #dcfce7; color: #166534; border-radius: 12px; font-size: 11px; font-weight: 700;">🟢 Available</span>
+                                {% else %}
+                                <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: #fee2e2; color: #991b1b; border-radius: 12px; font-size: 11px; font-weight: 700;">🔴 Unavailable / Off Duty</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="fee-tag">₹{{ doctor.consultation_fee }}</div>
+                            </td>
+                            <td>
+                                {% if doctor.available %}
+                                <button type="button" class="btn-select-doc">
+                                    {% if forloop.first %}✓ Selected{% else %}Select Doctor{% endif %}
+                                </button>
+                                {% else %}
+                                <button type="button" class="btn-select-doc" disabled style="opacity: 0.55; cursor: not-allowed; background: #94a3b8;" title="This doctor is off-duty / unavailable today">
+                                    Off Duty Today
+                                </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                                No doctors found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- FORM START -->
+            <form method="POST" action="{% url 'book_appointment' %}">
+                {% csrf_token %}
+
+                <!-- HIDDEN SELECT / RADIO INPUT BOUND TO FORM -->
+                <input type="hidden" id="selectedDoctorInput" name="doctor" value="{{ doctors.0.id|default:'' }}" required>
+
+                <!-- SECTION 2: APPOINTMENT DATE & TIME -->
+                <div class="section-header">
+                    <div class="section-title">
+                        <span>🗓️</span> Step 2: Choose Date & Time
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="appointment_date">Appointment Date <span class="req">*</span></label>
+                        <input type="date" id="appointment_date" name="appointment_date" min="{{ today }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointment_time">Appointment Time <span class="req">*</span></label>
+                        <input type="time" id="appointment_time" name="appointment_time" required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="reason">Reason for Visit / Symptoms</label>
+                        <textarea id="reason" name="reason" placeholder="Describe your health concern or symptoms (e.g. Back pain, Regular Checkup, Fever)..."></textarea>
+                    </div>
+                </div>
+
+                <!-- FORM ACTIONS -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        📅 Confirm & Book Appointment
+                    </button>
+                    <a href="{% url 'patient_dashboard' %}" class="btn-cancel">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT FOR TABLE FILTERING & SELECTION -->
+    <script>
+        function selectDoctorRow(row, docId) {
+            // Unselect all rows
+            document.querySelectorAll('.doc-row').forEach(r => {
+                r.classList.remove('selected');
+                const btn = r.querySelector('.btn-select-doc');
+                if (btn) btn.innerText = 'Select Doctor';
+                const radio = r.querySelector('input[type="radio"]');
+                if (radio) radio.checked = false;
+            });
+
+            // Select clicked row
+            row.classList.add('selected');
+            const rowBtn = row.querySelector('.btn-select-doc');
+            if (rowBtn) rowBtn.innerText = '✓ Selected';
+            const rowRadio = row.querySelector('input[type="radio"]');
+            if (rowRadio) rowRadio.checked = true;
+
+            // Set hidden form field
+            document.getElementById('selectedDoctorInput').value = docId;
+        }
+
+        function filterDoctors(deptSlug, pillBtn) {
+            // Update active pill
+            document.querySelectorAll('.dept-pill').forEach(p => p.classList.remove('active'));
+            pillBtn.classList.add('active');
+
+            // Filter rows
+            const rows = document.querySelectorAll('.doc-row');
+            let firstVisible = null;
+
+            rows.forEach(row => {
+                const docDept = row.getAttribute('data-dept');
+                if (deptSlug === 'all' || docDept === deptSlug) {
+                    row.style.display = '';
+                    if (!firstVisible) firstVisible = row;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (firstVisible) {
+                const docId = firstVisible.getAttribute('data-doc-id');
+                selectDoctorRow(firstVisible, docId);
+            }
+        }
+
+        function filterDoctorsByAvail(availType, pillBtn) {
+            document.querySelectorAll('.dept-pill').forEach(p => p.classList.remove('active'));
+            pillBtn.classList.add('active');
+
+            const rows = document.querySelectorAll('.doc-row');
+            let firstVisible = null;
+
+            rows.forEach(row => {
+                const docAvail = row.getAttribute('data-avail');
+                if (availType === 'all' || docAvail === availType) {
+                    row.style.display = '';
+                    if (!firstVisible) firstVisible = row;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (firstVisible) {
+                const docId = firstVisible.getAttribute('data-doc-id');
+                selectDoctorRow(firstVisible, docId);
+            }
+        }
+    </script>
+</body>
+</html>

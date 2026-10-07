@@ -1,0 +1,623 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments List | Patil Hospital Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ================= SIDEBAR ================= */
+        aside {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0f766e, #115e59);
+            color: white;
+            padding: 25px 18px;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.08);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .brand {
+            font-size: 23px;
+            font-weight: bold;
+            padding: 10px 8px 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            background: white;
+            color: #0f766e;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .side-label {
+            font-size: 11px;
+            color: #99f6e4;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            margin: 10px 10px 12px;
+        }
+
+        aside a {
+            display: block;
+            color: #d1fae5;
+            padding: 13px 14px;
+            margin: 5px 0;
+            border-radius: 9px;
+            font-size: 14px;
+            transition: 0.25s;
+        }
+
+        aside a:hover,
+        aside a.active {
+            background: rgba(255, 255, 255, 0.16);
+            color: white;
+        }
+
+        /* ================= MAIN CONTENT ================= */
+        .dash-main {
+            margin-left: 250px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .dash-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .eyebrow {
+            color: #0f766e;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+        }
+
+        .dash-head h1 {
+            font-size: 28px;
+            margin-top: 6px;
+            color: #111827;
+        }
+
+        .btn-back {
+            background: #ffffff;
+            color: #374151;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            border: 1px solid #d1d5db;
+            transition: 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        /* ================= PANEL ================= */
+        .panel {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .panel-header h2 {
+            font-size: 20px;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .count-badge {
+            background: #ccfbf1;
+            color: #0f766e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* ================= FILTER / SEARCH BAR ================= */
+        .filter-bar {
+            padding: 16px 22px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-form {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .search-input-group {
+            flex: 1;
+            min-width: 230px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 9px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            background: white;
+            color: #1e293b;
+        }
+
+        .search-input:focus, .select-control:focus {
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+        .select-control {
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            background: white;
+            color: #1e293b;
+            cursor: pointer;
+        }
+
+        .label-text {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .btn-search {
+            background: #0f766e;
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-search:hover {
+            background: #115e59;
+        }
+
+        .btn-reset {
+            color: #64748b;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .btn-reset:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        /* ================= TABLE ================= */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            background: #f0fdfa;
+            color: #374151;
+            font-size: 12px;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+            color: #4b5563;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        td strong {
+            color: #111827;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .status.confirmed { background: #dcfce7; color: #166534; }
+        .status.pending { background: #fef3c7; color: #92400e; }
+        .status.completed { background: #dbeafe; color: #1d4ed8; }
+        .status.cancelled { background: #fee2e2; color: #b91c1c; }
+
+        /* ================= PAGINATION ================= */
+        .pagination-bar {
+            padding: 16px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e5e7eb;
+            background: #ffffff;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .pagination-info {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .pagination-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .per-page-form {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .page-link {
+            padding: 7px 13px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .page-link:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #0f172a;
+        }
+
+        .page-link.active {
+            background: #0f766e;
+            color: white;
+            border-color: #0f766e;
+        }
+
+        .page-link.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px !important;
+            color: #9ca3af !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside>
+        <div class="brand">
+            <span class="brand-icon">✚</span>
+            Patil Hospital
+        </div>
+
+        <div class="side-label">ADMIN PORTAL</div>
+
+        <a href="{% url 'admin_dashboard' %}">▦ Dashboard</a>
+        <a href="{% url 'admin_doctors_list' %}">👨‍⚕️ Doctors List</a>
+        <a href="{% url 'admin_patients_list' %}">👤 Patients List</a>
+        <a href="{% url 'admin_appointments_list' %}" class="active">📅 Appointments List</a>
+        <a href="{% url 'manage_departments' %}">⚙️ System Settings</a>
+        <a href="{% url 'logout' %}" style="margin-top: 30px; color: #fca5a5;">↪ Logout</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <section class="dash-main">
+        <header class="dash-head">
+            <div>
+                <span class="eyebrow">ADMIN MANAGEMENT</span>
+                <h1>📅 Appointments Directory</h1>
+            </div>
+            <div>
+                <a href="{% url 'admin_dashboard' %}" class="btn-back">← Back to Dashboard</a>
+            </div>
+        </header>
+
+        <!-- PANEL -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2>
+                    Appointments List
+                    <span class="count-badge">{{ total_count }} Total</span>
+                </h2>
+            </div>
+
+            <!-- FILTER & SEARCH BAR -->
+            <div class="filter-bar">
+                <form method="GET" action="" class="filter-form" id="aptListFilterForm" onsubmit="event.preventDefault(); filterAppointmentsListAjax(this);">
+                    <div class="search-input-group">
+                        <input type="text" name="q" value="{{ search_q }}" placeholder="🔍 Search patient, doctor or reason..." class="search-input">
+                    </div>
+
+                    <select name="status" class="select-control" onchange="filterAppointmentsListAjax(this.form)">
+                        <option value="">All Statuses</option>
+                        <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Confirmed" {% if status_filter == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                        <option value="Completed" {% if status_filter == 'Completed' %}selected{% endif %}>Completed</option>
+                        <option value="Cancelled" {% if status_filter == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                        <option value="Rejected" {% if status_filter == 'Rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+
+                    <input type="date" name="date" value="{{ date_filter }}" class="select-control" style="max-width: 170px;" onchange="filterAppointmentsListAjax(this.form)">
+
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span class="label-text">Show:</span>
+                        <select name="per_page" class="select-control" onchange="filterAppointmentsListAjax(this.form)">
+                            <option value="5" {% if per_page == 5 %}selected{% endif %}>5 per page</option>
+                            <option value="10" {% if per_page == 10 %}selected{% endif %}>10 per page</option>
+                            <option value="20" {% if per_page == 20 %}selected{% endif %}>20 per page</option>
+                            <option value="50" {% if per_page == 50 %}selected{% endif %}>50 per page</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-search">Filter</button>
+
+                    {% if search_q or status_filter or date_filter or per_page != 10 %}
+                    <a href="{% url 'admin_appointments_list' %}" class="btn-reset" onclick="event.preventDefault(); resetAppointmentsListAjax();">Reset</a>
+                    {% endif %}
+                </form>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Department</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in appointments %}
+                        <tr>
+                            <td>{{ forloop.counter0|add:appointments.start_index }}</td>
+                            <td>
+                                <strong>{{ appointment.patient.name }}</strong><br>
+                                <small style="color: #94a3b8;">{{ appointment.patient.phone }}</small>
+                            </td>
+                            <td>
+                                <strong>{% if "Dr." in appointment.doctor.name %}{{ appointment.doctor.name }}{% else %}Dr. {{ appointment.doctor.name }}{% endif %}</strong><br>
+                                <small style="color: #94a3b8;">{{ appointment.doctor.specialization }}</small>
+                            </td>
+                            <td>{{ appointment.department.name|default:"General" }}</td>
+                            <td>{{ appointment.appointment_date|date:"d M Y" }}</td>
+                            <td>{{ appointment.appointment_time|time:"h:i A" }}</td>
+                            <td>{{ appointment.reason|default:"-" }}</td>
+                            <td>
+                                {% if appointment.status == "Confirmed" %}
+                                <span class="status confirmed">Confirmed</span>
+                                {% elif appointment.status == "Pending" %}
+                                <span class="status pending">Pending</span>
+                                {% elif appointment.status == "Completed" %}
+                                <span class="status completed">Completed</span>
+                                {% elif appointment.status == "Cancelled" %}
+                                <span class="status cancelled">Cancelled</span>
+                                {% else %}
+                                <span class="status">{{ appointment.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="empty-state">
+                                No appointments found matching your search.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINATION FOOTER -->
+            <div class="pagination-bar">
+                <div class="pagination-info">
+                    Showing Page {{ appointments.number }} of {{ appointments.paginator.num_pages }} (Total {{ total_count }} Appointments)
+                </div>
+
+                <div class="pagination-right">
+                    <form method="GET" class="per-page-form">
+                        {% if search_q %}<input type="hidden" name="q" value="{{ search_q }}">{% endif %}
+                        {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
+                        {% if date_filter %}<input type="hidden" name="date" value="{{ date_filter }}">{% endif %}
+                        <span class="label-text">Records per page:</span>
+                        <select name="per_page" class="select-control" onchange="this.form.submit()">
+                            <option value="5" {% if per_page == 5 %}selected{% endif %}>5</option>
+                            <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+                            <option value="20" {% if per_page == 20 %}selected{% endif %}>20</option>
+                            <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+                        </select>
+                    </form>
+
+                    {% if appointments.has_other_pages %}
+                    <div class="pagination-controls">
+                        {% if appointments.has_previous %}
+                        <a href="?page={{ appointments.previous_page_number }}&per_page={{ per_page }}{% if search_q %}&q={{ search_q }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" class="page-link">← Prev</a>
+                        {% else %}
+                        <span class="page-link disabled">← Prev</span>
+                        {% endif %}
+
+                        {% for i in appointments.paginator.page_range %}
+                            {% if appointments.number == i %}
+                            <span class="page-link active">{{ i }}</span>
+                            {% else %}
+                            <a href="?page={{ i }}&per_page={{ per_page }}{% if search_q %}&q={{ search_q }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" class="page-link">{{ i }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if appointments.has_next %}
+                        <a href="?page={{ appointments.next_page_number }}&per_page={{ per_page }}{% if search_q %}&q={{ search_q }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}" class="page-link">Next →</a>
+                        {% else %}
+                        <span class="page-link disabled">Next →</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function filterAppointmentsListAjax(form) {
+            if (!form) form = document.getElementById('aptListFilterForm');
+            if (!form) return;
+
+            const qVal = form.elements['q'] ? form.elements['q'].value : '';
+            const statusVal = form.elements['status'] ? form.elements['status'].value : '';
+            const dateVal = form.elements['date'] ? form.elements['date'].value : '';
+            const perPageVal = form.elements['per_page'] ? form.elements['per_page'].value : '';
+
+            const currentUrl = new URL(window.location.origin + window.location.pathname);
+            const params = new URLSearchParams();
+
+            if (qVal) params.set('q', qVal);
+            if (statusVal) params.set('status', statusVal);
+            if (dateVal) params.set('date', dateVal);
+            if (perPageVal) params.set('per_page', perPageVal);
+
+            const targetUrl = currentUrl.pathname + '?' + params.toString();
+
+            const panel = document.querySelector('.panel');
+            if (panel) {
+                panel.style.opacity = '0.5';
+                panel.style.transition = 'opacity 0.15s ease';
+            }
+
+            fetch(targetUrl, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newPanel = doc.querySelector('.panel');
+                
+                if (newPanel && panel) {
+                    panel.innerHTML = newPanel.innerHTML;
+                }
+                if (panel) {
+                    panel.style.opacity = '1';
+                }
+                window.history.pushState({}, '', targetUrl);
+            })
+            .catch(err => {
+                console.error('AJAX fetch error:', err);
+                if (panel) panel.style.opacity = '1';
+                window.location.href = targetUrl;
+            });
+        }
+
+        function resetAppointmentsListAjax() {
+            window.location.href = window.location.pathname;
+        }
+    </script>
+
+</body>
+</html>

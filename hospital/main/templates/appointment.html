@@ -1,0 +1,215 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Book Appointment | Patil Hospital</title>
+
+    <link rel="stylesheet"
+          href="{% static 'style.css' %}">
+</head>
+
+<body class="dashboard">
+
+    <aside>
+
+        <div class="brand">
+            <span class="brand-icon">✚</span>
+            Patil Hospital
+        </div>
+
+        <div class="side-label">
+            PATIENT PORTAL
+        </div>
+
+        <a href="{% url 'patient_dashboard' %}">
+            ▦ Dashboard
+        </a>
+
+        <a class="active">
+            📅 Book Appointment
+        </a>
+
+        <a>
+            ☷ My Appointments
+        </a>
+
+        <a>
+            Rx Prescription
+        </a>
+
+        <a>
+            📄 Test Reports
+        </a>
+
+        <a>
+            ₹ Billing / Payments
+        </a>
+
+        <a>
+            👤 Profile
+        </a>
+
+        <a href="{% url 'logout' %}">
+            ↪ Logout
+        </a>
+
+    </aside>
+
+
+    <section class="dash-main">
+
+        <header class="dash-head">
+
+            <div>
+
+                <span class="eyebrow">
+                    PATIENT PORTAL
+                </span>
+
+                <h1>
+                    Book Appointment
+                </h1>
+
+            </div>
+
+            <div class="profile">
+                ● Patient
+            </div>
+
+        </header>
+
+
+        <div class="panel">
+
+            <h2>
+                Book a Doctor Appointment
+            </h2>
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <p>
+                    <label>
+                        Select Doctor
+                    </label>
+                </p>
+
+                <p>
+
+                    <select name="doctor" required>
+
+                        <option value="">
+                            -- Select Doctor --
+                        </option>
+
+                        {% for doctor in doctors %}
+
+                        <option value="{{ doctor.id }}">
+
+                            Dr. {{ doctor.name }}
+                            -
+                            {{ doctor.specialization }}
+                            -
+                            ₹{{ doctor.consultation_fee }}
+
+                        </option>
+
+                        {% empty %}
+
+                        <option value="">
+                            No doctors available
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </p>
+
+
+                <p>
+
+                    <label>
+                        Appointment Date
+                    </label>
+
+                </p>
+
+                <p>
+
+                    <input
+                        type="date"
+                        name="appointment_date"
+                        required
+                    >
+
+                </p>
+
+
+                <p>
+
+                    <label>
+                        Appointment Time
+                    </label>
+
+                </p>
+
+                <p>
+
+                    <input
+                        type="time"
+                        name="appointment_time"
+                        required
+                    >
+
+                </p>
+
+
+                <p>
+
+                    <label>
+                        Reason for Visit
+                    </label>
+
+                </p>
+
+                <p>
+
+                    <textarea
+                        name="reason"
+                        rows="5"
+                        placeholder="Enter reason for appointment"
+                    ></textarea>
+
+                </p>
+
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Book Appointment →
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <script src="{% static 'script.js' %}"></script>
+
+</body>
+
+</html>
